@@ -158,7 +158,7 @@ namespace Cyrup_Rewrite
                     }
                 case 1:
                     {
-                        Process.Start("https://discord.gg/g3fYANrAeq");
+                        Process.Start("https://discord.gg/g3fYANrAeq"); // ( ͡° ͜ʖ ͡°)
                         break;
                     }
             }
