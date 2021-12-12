@@ -1,11 +1,11 @@
 # About
 
-Cyrup is an old Roblox Lua executor project I started a while ago. It is officially discontinued, however, I found the source code on one of my hard drives. The code was horrible, and I decided to completely rewrite the project. The rewrite does lack some features such as:
+Cyrup is an old Roblox Lua executor project I started a while ago. I found the old source code on one of my hard drives. The code was horrible, and I decided to completely rewrite the project. The rewrite does lack some features such as:
 
 - Discord Rich Presence
-- Update checker
 - Multiple APIs
 
+The original post-rewrite source code can be found in the [original branch](https://github.com/deaddlocust/Cyrup-Rewrite/tree/original).
 This currently uses the [WeAreDevs API](https://wearedevs.net/d/Exploit%20API).
 
 # Screenshots
