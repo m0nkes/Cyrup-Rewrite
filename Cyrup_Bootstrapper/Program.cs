@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -15,6 +15,7 @@ namespace Cyrup_Bootstrapper
         {
             wc = new WebClient();
             if (!Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}\\bin")) Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}\\bin");
+            if (!File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}\\latestversion")) File.Create($"{AppDomain.CurrentDomain.BaseDirectory}\\latestversion").Close();
 
             Console.WriteLine("Checking version...");
             try
@@ -31,33 +32,19 @@ namespace Cyrup_Bootstrapper
                 Environment.Exit(1);
             }
 
-            if (!File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}\\latestversion"))
-            {
-                StreamWriter writer = File.CreateText($"{AppDomain.CurrentDomain.BaseDirectory}\\latestversion");
-                writer.Write($"{AppDomain.CurrentDomain.BaseDirectory}\\latestversion", version);
-                writer.Dispose();
-                DownloadAndLaunch();
-            }
-            else if (version != File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}\\latestversion").Trim())
+            if (version != File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}\\latestversion").Trim())
             {
                 File.WriteAllText($"{AppDomain.CurrentDomain.BaseDirectory}\\latestversion", string.Empty);
                 File.WriteAllText($"{AppDomain.CurrentDomain.BaseDirectory}\\latestversion", version);
-                DownloadAndLaunch();
-            }
-            else
-            {
-                Process.Start($"{AppDomain.CurrentDomain.BaseDirectory}\\bin\\Release\\Cyrup_Rewrite.exe");
-            }
-        }
 
-        private static void DownloadAndLaunch()
-        {
-            Console.WriteLine("Downloading files...");
-            wc.DownloadFile($"https://github.com/deaddlocust/Cyrup-Rewrite/releases/download/{version}/Release.zip", $"{AppDomain.CurrentDomain.BaseDirectory}\\Release.zip");
-            Console.WriteLine("Extracting files...");
-            ZipFile.ExtractToDirectory($"{AppDomain.CurrentDomain.BaseDirectory}\\Release.zip", $"{AppDomain.CurrentDomain.BaseDirectory}\\bin");
-            Console.WriteLine("Cleaning up...");
-            File.Delete($"{AppDomain.CurrentDomain.BaseDirectory}\\Release.zip");
+                Console.WriteLine("Downloading files...");
+                wc.DownloadFile($"https://github.com/deaddlocust/Cyrup-Rewrite/releases/download/{version}/Release.zip", $"{AppDomain.CurrentDomain.BaseDirectory}\\Release.zip");
+                Console.WriteLine("Extracting files...");
+                ZipFile.ExtractToDirectory($"{AppDomain.CurrentDomain.BaseDirectory}\\Release.zip", $"{AppDomain.CurrentDomain.BaseDirectory}\\bin");
+                Console.WriteLine("Cleaning up...");
+                File.Delete($"{AppDomain.CurrentDomain.BaseDirectory}\\Release.zip");
+            }
+
             Console.WriteLine("Starting...");
             Process.Start($"{AppDomain.CurrentDomain.BaseDirectory}\\bin\\Release\\Cyrup_Rewrite.exe");
         }
