@@ -91,7 +91,7 @@ namespace Cyrup_Rewrite
                 Task.Factory.StartNew(() => // auto execute
                 {
                     while (!api.isAPIAttached()) Thread.Sleep(10);
-                    foreach (string path in Directory.GetFiles(Environment.CurrentDirectory + "\\autoexec"))
+                    foreach (string path in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "\\autoexec"))
                     {
                         api.SendLuaScript(File.ReadAllText(path));
                     }
@@ -116,7 +116,7 @@ namespace Cyrup_Rewrite
             opd.AllowedFileTypes = new string[] { "txt", "lua" };
             opd.CanChooseFiles = true;
             opd.CanChooseDirectories = false;
-            opd.DirectoryPath = Environment.CurrentDirectory + "\\scripts";
+            opd.DirectoryPath = AppDomain.CurrentDomain.BaseDirectory + "\\scripts";
             opd.ColorScheme = Colors.Base;
 
             Application.Run(opd);
@@ -130,7 +130,7 @@ namespace Cyrup_Rewrite
             SaveDialog opd = new SaveDialog("Save file", "");
             opd.Width = Console.WindowWidth;
             opd.Height = Console.WindowHeight;
-            opd.DirectoryPath = Environment.CurrentDirectory + "\\scripts";
+            opd.DirectoryPath = AppDomain.CurrentDomain.BaseDirectory + "\\scripts";
             opd.ColorScheme = Colors.Base;
 
             Application.Run(opd);
@@ -158,7 +158,7 @@ namespace Cyrup_Rewrite
                     }
                 case 1:
                     {
-                        Process.Start("https://discord.gg/g3fYANrAeq"); // ( ͡° ͜ʖ ͡°)
+                        Process.Start("https://discord.gg/QqSS9286vV");
                         break;
                     }
             }

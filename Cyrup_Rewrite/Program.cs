@@ -10,8 +10,8 @@ namespace Cyrup_Rewrite
         static void Main(string[] args)
         {
             Console.SetWindowSize(80, 20);
-            if (!Directory.Exists(Environment.CurrentDirectory + "\\autoexec")) Directory.CreateDirectory(Environment.CurrentDirectory + "\\autoexec");
-            if (!Directory.Exists(Environment.CurrentDirectory + "\\scripts")) Directory.CreateDirectory(Environment.CurrentDirectory + "\\scripts");
+            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\autoexec")) Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\autoexec");
+            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\scripts")) Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\scripts");
 
             IntPtr consolehwnd = GetConsoleWindow();
             if (consolehwnd == IntPtr.Zero)
