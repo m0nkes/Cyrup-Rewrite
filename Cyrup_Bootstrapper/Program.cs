@@ -40,6 +40,18 @@ namespace Cyrup_Bootstrapper
                 Console.WriteLine("Downloading files...");
                 wc.DownloadFile($"https://github.com/deaddlocust/Cyrup-Rewrite/releases/download/{version}/Release.zip", $"{AppDomain.CurrentDomain.BaseDirectory}\\Release.zip");
                 Console.WriteLine("Extracting files...");
+                
+                if (Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}\\bin\\Release"))
+                {
+                    foreach (string file in Directory.GetFiles($"{AppDomain.CurrentDomain.BaseDirectory}\\bin\\Release")) File.Delete(file);
+                    foreach (string folder in Directory.GetDirectories($"{AppDomain.CurrentDomain.BaseDirectory}\\bin\\Release"))
+                    {
+                        foreach (string file in Directory.GetFiles(folder)) File.Delete(file);
+                        Directory.Delete(folder);
+                    }
+                    Directory.Delete($"{AppDomain.CurrentDomain.BaseDirectory}\\bin\\Release");
+                }
+
                 ZipFile.ExtractToDirectory($"{AppDomain.CurrentDomain.BaseDirectory}\\Release.zip", $"{AppDomain.CurrentDomain.BaseDirectory}\\bin");
                 Console.WriteLine("Cleaning up...");
                 File.Delete($"{AppDomain.CurrentDomain.BaseDirectory}\\Release.zip");
