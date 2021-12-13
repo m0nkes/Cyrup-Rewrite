@@ -1,19 +1,21 @@
-- name: discord-webhook
-  # You may pin to the exact commit or the version.
-  # uses: johnnyhuy/actions-discord-git-webhook@ba54912b26910da886c9095317d6da6182a87224
-  uses: johnnyhuy/actions-discord-git-webhook@v1.0.0
-  with:
-    # Discord webhook URL
-    webhook_url: https://discord.com/api/webhooks/919966391472390194/OIwNHeR4lXF_Lp63yZj2p9yQ2OXdHsJTGzTf1DV7X0e7FSyXVYeyF7KlWZoi8Id_PvTc
-    # Discord Webhook ID (ignored if `webhook_url` is set)
-    id: # optional
-    # Discord Webhook token (ignored if `webhook_url` is set)
-    token: # optional
-    # Overwrite repository name with a custom one
-    repo_name: # optional
-    # Hide the full GitHub username
-    censor_username: # optional
-    # Toggle whether to show repo links on the webhook event
-    hide_links: # optional
-    # Color of the Discord embed
-    color: # optional, default is 7dbbe6
+name: Discord Webhook
+
+on:
+  push:
+  release:
+    types: [published]
+    
+  pull_request_target:
+    types: [assigned, opened, synchronize, reopened]
+  
+jobs:
+  git:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Run Discord Webhook
+      uses: johnnyhuy/actions-discord-git-webhook@main
+      with:
+        webhook_url: https://discord.com/api/webhooks/893407054717419543/907cH3T_lhupUTulBicYBLd5WzmJcqf8mMWOaueaV4aG1aP0XYRsHDE-E0AR6Fhgxf45
