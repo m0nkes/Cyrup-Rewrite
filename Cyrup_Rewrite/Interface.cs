@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -13,11 +14,12 @@ namespace Cyrup_Rewrite
         private Toplevel top { get; set; }
         private FrameView win { get; set; }
         private FrameView win2 { get; set; }
+        private FrameView win3 { get; set; }
         private TextView editor { get; set; }
+        private ListView scriptlist { get; set; }
+        private List<string> scriptlist_paths { get; set; }
 
         private ExploitAPI api { get; set; }
-
-        public void Start() => Application.Run();
 
         public Interface(string title)
         {
@@ -26,17 +28,15 @@ namespace Cyrup_Rewrite
 
             top = Application.Top;
             win = new FrameView(new Rect(0, 0, top.Frame.Width - 68, top.Frame.Height), title);
-            win2 = new FrameView(new Rect(12, 0, top.Frame.Width - 12, top.Frame.Height), string.Empty);
+            win2 = new FrameView(new Rect(12, 0, top.Frame.Width - 28, top.Frame.Height), string.Empty);
+            win3 = new FrameView(new Rect(top.Frame.Width - 16, 0, top.Frame.Width - 64, top.Frame.Height), string.Empty);
             api = new ExploitAPI();
 
-            Colors.Base.Normal = Application.Driver.MakeAttribute(Color.BrightMagenta, Color.Black);
-            Colors.Menu.Normal = Application.Driver.MakeAttribute(Color.Cyan, Color.Black);
-            Colors.Dialog.Normal = Application.Driver.MakeAttribute(Color.Magenta, Color.Black);
+            Colors.Base.Normal = new Terminal.Gui.Attribute(Color.BrightMagenta, Color.Black);
+            Colors.Dialog.Normal = new Terminal.Gui.Attribute(Color.Magenta, Color.Black);
+            win.ColorScheme = win2.ColorScheme = win3.ColorScheme = Colors.Base;
 
-            win.ColorScheme = Colors.Base;
-            win2.ColorScheme = Colors.Base;
-
-            top.Add(win, win2);
+            top.Add(win, win2, win3);
 
             Button inj = new Button(1, 1, "Inj ");
             Button exec = new Button(1, 3, "Exec");
@@ -45,14 +45,32 @@ namespace Cyrup_Rewrite
             Button save = new Button(1, 9, "Save");
             Button opt = new Button(1, 16, "Opt ");
 
+            scriptlist = new ListView()
+            {
+                X = 0,
+                Y = 0,
+                Width = Dim.Fill(),
+                Height = Dim.Fill(),
+                ColorScheme = new ColorScheme()
+                {
+                    Normal = new Terminal.Gui.Attribute(Color.DarkGray, Color.Black),
+                    Focus = new Terminal.Gui.Attribute(Color.White, Color.Black),
+                    HotNormal = new Terminal.Gui.Attribute(Color.White, Color.Black)
+                }
+            };
+
             editor = new TextView()
             {
                 X = 0,
                 Y = 0,
                 Width = Dim.Fill(),
                 Height = Dim.Fill(),
-                ColorScheme = Colors.Menu,
-                Text = "-- join the discord etc etc idk"
+                ColorScheme = new ColorScheme()
+                {
+                    Normal = new Terminal.Gui.Attribute(Color.Cyan, Color.Black),
+                    Focus = new Terminal.Gui.Attribute(Color.White, Color.Black)
+                },
+                Text = "-- Join the discord: discord.io/cyrupofficial"
             };
 
             win2.KeyDown += (k) =>
@@ -75,8 +93,20 @@ namespace Cyrup_Rewrite
             save.Clicked += OnSave;
             opt.Clicked += OnOptMenu;
 
+            scriptlist.OpenSelectedItem += (ListViewItemEventArgs e) => { editor.Text = File.ReadAllText(scriptlist_paths[e.Item]).Trim(); };
+
             win.Add(inj, exec, clr, open, save, opt);
             win2.Add(editor);
+            win3.Add(scriptlist);
+        }
+
+        public void Start()
+        {
+            scriptlist_paths = new List<string>(Directory.GetFiles($"{AppDomain.CurrentDomain.BaseDirectory}\\scripts"));
+            List<string> names = new List<string>();
+            foreach(string file in scriptlist_paths) names.Add(Path.GetFileNameWithoutExtension(file));
+            scriptlist.SetSource(names);
+            Application.Run();
         }
 
         private void OnInject()
@@ -121,7 +151,7 @@ namespace Cyrup_Rewrite
 
             Application.Run(opd);
 
-            if (opd.FilePaths.Count > 0) editor.Text = File.ReadAllText(opd.FilePaths[0]);
+            if (opd.FilePaths.Count > 0) editor.Text = File.ReadAllText(opd.FilePaths[0]).Trim();
             opd.Dispose();
         }
 
@@ -158,7 +188,7 @@ namespace Cyrup_Rewrite
                     }
                 case 1:
                     {
-                        Process.Start("https://discord.gg/QqSS9286vV");
+                        Process.Start("https://discord.io/cyrupofficial");
                         break;
                     }
             }
