@@ -1,6 +1,6 @@
 # About
 
-Cyrup is Roblox Lua executor project I had started a while ago. As of December 2021, an attempt to revitalise it has been made. This is the official GitHub repository for the source code.
+Cyrup is Roblox Lua executor project I had started a while ago. As of December 2021, an attempt to revitalise it has been made. This is the official GitHub repository for the source code. Feel free to create pull requests and help improve Cyrup's codebase (you'll be credited!).
 
 The original post-rewrite source code can be found in the [original branch](https://github.com/deaddlocust/Cyrup-Rewrite/tree/original).
 
