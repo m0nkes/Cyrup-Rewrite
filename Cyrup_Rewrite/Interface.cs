@@ -156,7 +156,7 @@ namespace Cyrup_Rewrite
                     Task.Factory.StartNew(() => // auto execute
                     {
                         while (!api.isAPIAttached()) Thread.Sleep(10);
-                        foreach (string path in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "\\autoexec"))
+                        foreach (string path in Directory.GetFiles($"{AppDomain.CurrentDomain.BaseDirectory}\\autoexec"))
                         {
                             api.SendLuaScript(File.ReadAllText(path));
                         }
