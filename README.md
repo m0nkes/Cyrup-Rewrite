@@ -10,9 +10,8 @@ The original post-rewrite source code can be found in the [original branch](http
 This currently uses the [WeAreDevs API](https://wearedevs.net/d/Exploit%20API).
 
 # Screenshots
-![img](https://cdn.discordapp.com/attachments/876294236398575671/916970581407186954/unknown.png)
+![img](https://media.discordapp.net/attachments/876294236398575671/919812603306446858/unknown.png)
 ![img](https://media.discordapp.net/attachments/876294236398575671/917250249175760916/unknown.png)
-![img](https://cdn.discordapp.com/attachments/876294236398575671/916970477086466058/unknown.png)
 
 # License
 
