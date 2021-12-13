@@ -58,6 +58,7 @@ namespace Cyrup_Bootstrapper
             }
 
             Console.WriteLine("Starting...");
+            wc.Dispose();
             Process.Start($"{AppDomain.CurrentDomain.BaseDirectory}\\bin\\Release\\Cyrup_Rewrite.exe");
         }
     }
