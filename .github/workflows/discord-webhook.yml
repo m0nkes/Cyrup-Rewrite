@@ -18,4 +18,4 @@ jobs:
     - name: Run Discord Webhook
       uses: johnnyhuy/actions-discord-git-webhook@main
       with:
-        webhook_url: https://discord.com/api/webhooks/893407054717419543/907cH3T_lhupUTulBicYBLd5WzmJcqf8mMWOaueaV4aG1aP0XYRsHDE-E0AR6Fhgxf45
+        webhook_url: https://discord.com/api/webhooks/919966391472390194/OIwNHeR4lXF_Lp63yZj2p9yQ2OXdHsJTGzTf1DV7X0e7FSyXVYeyF7KlWZoi8Id_PvTc
