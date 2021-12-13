@@ -20,9 +20,7 @@ namespace Cyrup_Rewrite
         private List<string> scriptlist_paths { get; set; }
 
         private ExploitAPI api { get; set; }
-
-        private bool enable_scriptlist = true;
-        private bool enable_autoexec = true;
+        private SettingsObject settings { get; set; }
 
         public Interface(string title)
         {
@@ -103,11 +101,45 @@ namespace Cyrup_Rewrite
 
         public void Start()
         {
+            if (!File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}\\settings"))
+            {
+                SettingsObject obj = new SettingsObject();
+                obj.enable_scriptlist = true;
+                obj.enable_autoexec = true;
+                obj.enable_autoattach = false;
+                Settings.Save(obj);
+            }
+            settings = Settings.Load();
+            if (!settings.enable_scriptlist)
+            {
+                win2.Width = top.Frame.Width - 12;
+                win3.Visible = false;
+            }
+
             scriptlist_paths = new List<string>(Directory.GetFiles($"{AppDomain.CurrentDomain.BaseDirectory}\\scripts"));
             List<string> names = new List<string>();
             foreach (string file in scriptlist_paths) names.Add(Path.GetFileNameWithoutExtension(file));
             scriptlist.SetSource(names);
+
+            new Thread(new ThreadStart(AutoAttachThread)).Start();
+
             Application.Run();
+        }
+
+        private void AutoAttachThread()
+        {
+            while (true)
+            {
+                if (settings.enable_autoattach)
+                {
+                    while (Process.GetProcessesByName("RobloxPlayerBeta").Length < 1) Thread.Sleep(5);
+                    while (Process.GetProcessesByName("RobloxPlayerBeta")[0].MainWindowHandle == IntPtr.Zero) Thread.Sleep(5); // This works for some reason
+                    api.LaunchExploit();
+                    while (!api.isAPIAttached()) Thread.Sleep(5);
+                    while (Process.GetProcessesByName("RobloxPlayerBeta").Length > 0) Thread.Sleep(5);
+                }
+                Thread.Sleep(1);
+            }
         }
 
         private void OnInject()
@@ -119,7 +151,7 @@ namespace Cyrup_Rewrite
             else
             {
                 Task.Factory.StartNew(api.LaunchExploit);
-                if (enable_autoexec)
+                if (settings.enable_autoexec)
                 {
                     Task.Factory.StartNew(() => // auto execute
                     {
@@ -185,8 +217,9 @@ namespace Cyrup_Rewrite
 
             Button killrbx = new Button(1, 1, "Kill Roblox");
             Button discord = new Button(1, 3, "Discord Invite");
-            CheckBox sl_visible = new CheckBox(1, 6, "Show script list", enable_scriptlist);
-            CheckBox autoexec = new CheckBox(1, 8, "Auto execute", enable_autoexec);
+            CheckBox sl_visible = new CheckBox(1, 6, "Show script list", settings.enable_scriptlist);
+            CheckBox autoexec = new CheckBox(1, 8, "Auto execute", settings.enable_autoexec);
+            CheckBox autoattach = new CheckBox(1, 10, "Auto attach", settings.enable_autoattach);
 
             Button exitopt = new Button(view.Frame.Width - 6, 0, "X");
 
@@ -201,15 +234,16 @@ namespace Cyrup_Rewrite
             discord.Clicked += () => Process.Start("https://discord.io/cyrupofficial");
             exitopt.Clicked += () => Application.RequestStop(main);
 
-            view.Add(killrbx, discord, sl_visible, autoexec);
+            view.Add(killrbx, discord, sl_visible, autoexec, autoattach);
             main.Add(view);
             main.Add(exitopt);
 
             Application.Run(main);
-            enable_scriptlist = sl_visible.Checked;
-            enable_autoexec = autoexec.Checked;
 
-            if (enable_scriptlist)
+            settings.enable_scriptlist = sl_visible.Checked;
+            settings.enable_autoexec = autoexec.Checked;
+            settings.enable_autoattach = autoattach.Checked;
+            if (settings.enable_scriptlist)
             {
                 win2.Width = top.Frame.Width - 28;
                 win3.Visible = true;
@@ -219,6 +253,7 @@ namespace Cyrup_Rewrite
                 win2.Width = top.Frame.Width - 12;
                 win3.Visible = false;
             }
+            Settings.Save(settings);
         }
     }
 }
