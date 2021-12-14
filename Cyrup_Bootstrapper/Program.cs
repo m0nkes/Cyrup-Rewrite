@@ -8,18 +8,17 @@ namespace Cyrup_Bootstrapper
 {
     public class Program
     {
-        private static WebClient wc { get; set; }
         private static string version { get; set; }
 
         private static void Main(string[] args)
         {
-            wc = new WebClient();
+            
             if (!Directory.Exists($"{AppDomain.CurrentDomain.BaseDirectory}\\bin")) Directory.CreateDirectory($"{AppDomain.CurrentDomain.BaseDirectory}\\bin");
             if (!File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}\\latestversion")) File.Create($"{AppDomain.CurrentDomain.BaseDirectory}\\latestversion").Close();
 
             Console.WriteLine("Checking version...");
             try
-            { version = wc.DownloadString("https://pastebin.com/raw/ZFNbFVnN").Trim(); }
+            { version = new WebClient().DownloadString("https://pastebin.com/raw/ZFNbFVnN").Trim(); }
             catch
             {
                 Console.Clear();
@@ -58,7 +57,7 @@ namespace Cyrup_Bootstrapper
             }
 
             Console.WriteLine("Starting...");
-            wc.Dispose();
+          
             Process.Start($"{AppDomain.CurrentDomain.BaseDirectory}\\bin\\Release\\Cyrup_Rewrite.exe");
         }
     }
