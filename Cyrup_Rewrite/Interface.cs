@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Terminal.Gui;
 using WeAreDevs_API;
+using static Cyrup_Rewrite.Native;
 
 namespace Cyrup_Rewrite
 {
@@ -21,10 +22,14 @@ namespace Cyrup_Rewrite
 
         private ExploitAPI api { get; set; }
         private SettingsObject settings { get; set; }
+        private Mutex multirbx_mutex { get; set; }
+        private IntPtr hwnd { get; set; }
 
-        public Interface(string title)
+        public Interface(IntPtr hwnd, string title)
         {
             Console.Title = title;
+            this.hwnd = hwnd;
+
             Application.Init();
 
             top = Application.Top;
@@ -106,14 +111,32 @@ namespace Cyrup_Rewrite
                 SettingsObject obj = new SettingsObject();
                 obj.enable_scriptlist = true;
                 obj.enable_autoexec = true;
-                obj.enable_autoattach = false;
                 Settings.Save(obj);
             }
             settings = Settings.Load();
-            if (!settings.enable_scriptlist)
+
+            if (settings.enable_topmost) SetWindowPos(hwnd, -1, 0, 0, 0, 0, 0x1 | 0x2);
+            else SetWindowPos(hwnd, -2, 0, 0, 0, 0, 0x1 | 0x2);
+            if (settings.enable_opacity) SetLayeredWindowAttributes(hwnd, 0, 128, 0x2);
+            else SetLayeredWindowAttributes(hwnd, 0, 255, 0x2);
+            if (settings.enable_scriptlist)
+            {
+                win2.Width = top.Frame.Width - 28;
+                win3.Visible = true;
+            }
+            else
             {
                 win2.Width = top.Frame.Width - 12;
                 win3.Visible = false;
+            }
+            if (settings.enable_multirbx) multirbx_mutex = new Mutex(true, "ROBLOX_singletonMutex");
+            else
+            {
+                if (multirbx_mutex != null)
+                {
+                    multirbx_mutex.ReleaseMutex();
+                    multirbx_mutex.Dispose();
+                }
             }
 
             scriptlist_paths = new List<string>(Directory.GetFiles($"{AppDomain.CurrentDomain.BaseDirectory}\\scripts"));
@@ -217,9 +240,13 @@ namespace Cyrup_Rewrite
 
             Button killrbx = new Button(1, 1, "Kill Roblox");
             Button discord = new Button(1, 3, "Discord Invite");
-            CheckBox sl_visible = new CheckBox(1, 6, "Show script list", settings.enable_scriptlist);
-            CheckBox autoexec = new CheckBox(1, 8, "Auto execute", settings.enable_autoexec);
-            CheckBox autoattach = new CheckBox(1, 10, "Auto attach", settings.enable_autoattach);
+
+            CheckBox topmost = new CheckBox(1, 6, "Top most", settings.enable_topmost);
+            CheckBox sl_visible = new CheckBox(1, 8, "Show script list", settings.enable_scriptlist);
+            CheckBox autoexec = new CheckBox(1, 10, "Auto execute", settings.enable_autoexec);
+            CheckBox autoattach = new CheckBox(1, 12, "Auto attach", settings.enable_autoattach);
+            CheckBox opacity = new CheckBox(1, 14, "Opacity", settings.enable_opacity);
+            CheckBox multirbx = new CheckBox(1, 16, "Multi Roblox", settings.enable_multirbx);
 
             Button exitopt = new Button(view.Frame.Width - 6, 0, "X");
 
@@ -234,25 +261,58 @@ namespace Cyrup_Rewrite
             discord.Clicked += () => Process.Start("https://discord.io/cyrupofficial");
             exitopt.Clicked += () => Application.RequestStop(main);
 
-            view.Add(killrbx, discord, sl_visible, autoexec, autoattach);
+            topmost.Toggled += (bool e) =>
+            {
+                settings.enable_topmost = topmost.Checked;
+                if (settings.enable_topmost) SetWindowPos(hwnd, -1, 0, 0, 0, 0, 0x1 | 0x2);
+                else SetWindowPos(hwnd, -2, 0, 0, 0, 0, 0x1 | 0x2);
+            };
+
+            sl_visible.Toggled += (bool e) =>
+            {
+                settings.enable_scriptlist = sl_visible.Checked;
+                if (settings.enable_scriptlist)
+                {
+                    win2.Width = top.Frame.Width - 28;
+                    win3.Visible = true;
+                }
+                else
+                {
+                    win2.Width = top.Frame.Width - 12;
+                    win3.Visible = false;
+                }
+            };
+
+            autoexec.Toggled += (bool e) => settings.enable_autoexec = autoexec.Checked;
+
+            autoattach.Toggled += (bool e) => settings.enable_autoattach = autoexec.Checked;
+
+            opacity.Toggled += (bool e) =>
+            {
+                settings.enable_opacity = opacity.Checked;
+                if (settings.enable_opacity) SetLayeredWindowAttributes(hwnd, 0, 170, 0x2);
+                else SetLayeredWindowAttributes(hwnd, 0, 255, 0x2);
+            };
+
+            multirbx.Toggled += (bool e) =>
+            {
+                settings.enable_multirbx = multirbx.Checked;
+                if (settings.enable_multirbx) multirbx_mutex = new Mutex(true, "ROBLOX_singletonMutex");
+                else
+                {
+                    if (multirbx_mutex != null)
+                    {
+                        multirbx_mutex.ReleaseMutex();
+                        multirbx_mutex.Dispose();
+                    }
+                }
+            };
+
+            view.Add(killrbx, discord, sl_visible, autoexec, autoattach, topmost, opacity, multirbx);
             main.Add(view);
             main.Add(exitopt);
 
             Application.Run(main);
-
-            settings.enable_scriptlist = sl_visible.Checked;
-            settings.enable_autoexec = autoexec.Checked;
-            settings.enable_autoattach = autoattach.Checked;
-            if (settings.enable_scriptlist)
-            {
-                win2.Width = top.Frame.Width - 28;
-                win3.Visible = true;
-            }
-            else
-            {
-                win2.Width = top.Frame.Width - 12;
-                win3.Visible = false;
-            }
             Settings.Save(settings);
         }
     }

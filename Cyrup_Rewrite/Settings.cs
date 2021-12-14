@@ -26,8 +26,11 @@ namespace Cyrup_Rewrite
 
     public class SettingsObject
     {
+        public bool enable_topmost { get; set; }
         public bool enable_scriptlist { get; set; }
         public bool enable_autoexec { get; set; }
         public bool enable_autoattach { get; set; }
+        public bool enable_opacity{ get; set; }
+        public bool enable_multirbx { get; set; }
     }
 }

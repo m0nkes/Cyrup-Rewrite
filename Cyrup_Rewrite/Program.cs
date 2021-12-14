@@ -21,7 +21,9 @@ namespace Cyrup_Rewrite
             DeleteMenu(menuhandle, SC_MAXIMIZE, 0); // Disable maximize
             DeleteMenu(menuhandle, SC_SIZE, 0); // Disable resize
 
-            Interface gui = new Interface("Cyrup");
+            SetWindowLong(consolehwnd, -20 /*GWL_EXSTYLE*/, GetWindowLong(consolehwnd, -20) | 0x80000 /*WS_EX_LAYERED*/);
+
+            Interface gui = new Interface(consolehwnd, "Cyrup");
             gui.Start();
         }
     }
