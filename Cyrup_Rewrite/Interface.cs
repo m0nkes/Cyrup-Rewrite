@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Terminal.Gui;
 using WeAreDevs_API;
+using Cyrup_Rewrite.Controls;
 using static Cyrup_Rewrite.Native;
 
 namespace Cyrup_Rewrite
@@ -235,18 +236,28 @@ namespace Cyrup_Rewrite
 
         private void OnOptMenu()
         {
+            ColorScheme _CheckBoxcolor = new ColorScheme()
+            {
+                Normal = new Terminal.Gui.Attribute(Color.BrightMagenta, Color.Black),
+                Focus = new Terminal.Gui.Attribute(Color.Black, Color.Gray),
+                HotNormal = new Terminal.Gui.Attribute(Color.Cyan, Color.Black),
+                HotFocus = new Terminal.Gui.Attribute(Color.Cyan, Color.Gray)
+            };
+
             Window main = new Window(new Rect(0, 0, top.Frame.Width + 10, top.Frame.Height + 10), "", 0, new Border { BorderStyle = BorderStyle.None });
             FrameView view = new FrameView(new Rect(0, 0, 80, 20), "Options");
 
             Button killrbx = new Button(1, 1, "Kill Roblox");
             Button discord = new Button(1, 3, "Discord Invite");
 
-            CheckBox topmost = new CheckBox(1, 6, "Top most", settings.enable_topmost);
-            CheckBox sl_visible = new CheckBox(1, 8, "Show script list", settings.enable_scriptlist);
-            CheckBox autoexec = new CheckBox(1, 10, "Auto execute", settings.enable_autoexec);
-            CheckBox autoattach = new CheckBox(1, 12, "Auto attach", settings.enable_autoattach);
-            CheckBox opacity = new CheckBox(1, 14, "Opacity", settings.enable_opacity);
-            CheckBox multirbx = new CheckBox(1, 16, "Multi Roblox", settings.enable_multirbx);
+            _CheckBox topmost = new _CheckBox(1, 6, "Top most", settings.enable_topmost);
+            _CheckBox sl_visible = new _CheckBox(1, 8, "Show script list", settings.enable_scriptlist);
+            _CheckBox autoexec = new _CheckBox(1, 10, "Auto execute", settings.enable_autoexec);
+            _CheckBox autoattach = new _CheckBox(1, 12, "Auto attach", settings.enable_autoattach);
+            _CheckBox opacity = new _CheckBox(1, 14, "Opacity", settings.enable_opacity);
+            _CheckBox multirbx = new _CheckBox(1, 16, "Multi Roblox", settings.enable_multirbx);
+
+            topmost.ColorScheme = sl_visible.ColorScheme = autoexec.ColorScheme = autoattach.ColorScheme = opacity.ColorScheme = multirbx.ColorScheme = _CheckBoxcolor;
 
             Button exitopt = new Button(view.Frame.Width - 6, 0, "X");
 
@@ -308,7 +319,7 @@ namespace Cyrup_Rewrite
                 }
             };
 
-            view.Add(killrbx, discord, sl_visible, autoexec, autoattach, topmost, opacity, multirbx);
+            view.Add(killrbx, discord, topmost, sl_visible, autoexec, autoattach, opacity, multirbx);
             main.Add(view);
             main.Add(exitopt);
 
