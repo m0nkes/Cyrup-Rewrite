@@ -33,7 +33,7 @@ namespace Cyrup_Rewrite
             Application.Init();
 
             top = Application.Top;
-            win = new FrameView(new Rect(0, 0, top.Frame.Width - 68, top.Frame.Height), title);
+            win = new FrameView(new Rect(0, 0, top.Frame.Width - 68, top.Frame.Height), "Cyrup");
             win2 = new FrameView(new Rect(12, 0, top.Frame.Width - 28, top.Frame.Height));
             win3 = new FrameView(new Rect(top.Frame.Width - 16, 0, top.Frame.Width - 64, top.Frame.Height), string.Empty);
             api = new ExploitAPI();
@@ -108,6 +108,7 @@ namespace Cyrup_Rewrite
         {
             if (!File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}\\settings"))
             {
+                if (MessageBox.Query(string.Empty, "Join the Cyrup Discord server?", "Yes", "No") == 0) Process.Start("https://discord.io/cyrupofficial");
                 SettingsObject obj = new SettingsObject();
                 obj.enable_scriptlist = true;
                 obj.enable_autoexec = true;
@@ -237,7 +238,7 @@ namespace Cyrup_Rewrite
         {
             ColorScheme _CheckBoxcolor = new ColorScheme()
             {
-                Normal = new Terminal.Gui.Attribute(Color.BrightMagenta, Color.Black),
+                Normal = new Terminal.Gui.Attribute(Colors.Base.Normal.Foreground, Color.Black),
                 Focus = new Terminal.Gui.Attribute(Color.Black, Color.Gray),
                 HotNormal = new Terminal.Gui.Attribute(Color.Cyan, Color.Black),
                 HotFocus = new Terminal.Gui.Attribute(Color.Cyan, Color.Gray)
